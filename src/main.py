@@ -25,7 +25,12 @@ def build_models() -> List[ModelConfig]:
         ),
         ModelConfig(
             provider="google",
-            model_name="google/gemini-2.5-flash-preview",
+            model_name="~google/gemini-pro-latest",
+            temperature=0.2,
+        ),
+        ModelConfig(
+            provider="meta",
+            model_name="nousresearch/hermes-3-llama-3.1-405b",
             temperature=0.2,
         ),
     ]
@@ -42,8 +47,8 @@ def main() -> None:
         client=client,
         models=build_models(),
         logger=LOGGER,
-        save_every_n_rows=3,
-        delay_between_requests=1.5,
+        save_every_n_rows=1,
+        delay_between_requests=5,
     )
     processor.process()
 

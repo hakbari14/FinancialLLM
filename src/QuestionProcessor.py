@@ -50,8 +50,8 @@ class QuestionProcessor:
 
             for model in self.models:
                 column_name = self._response_column_name(model)
-                existing_value = str(row.get(column_name, "")).strip()
-                if existing_value:
+                existing_value = row.get(column_name)
+                if not pd.isna(existing_value):
                     self.logger.info("Skipping existing response for %s",column_name,)
                     continue
 
@@ -74,9 +74,14 @@ class QuestionProcessor:
         self.logger.info("Processing completed successfully.")
 
     def create_prompt_for_question(self, row) -> None:
-        context = str(row['context']).strip()
-        question = str(row['question']).strip()
-        prompt = f'Context:\n{context}\n\nQuestion: {question}\nProvide a concise answer.' 
+        if row['context'] is not None: 
+            context = str(row['context']).strip()
+            question = str(row['question']).strip()
+            prompt = f'Context:\n{context}\n\nQuestion: {question}\nProvide a concise answer.' 
+        else: 
+            question = str(row['question']).strip()
+            prompt = f'Question: {question}\nProvide a concise answer.' 
+            
         return prompt
 
     def _safe_save(self, df: pd.DataFrame) -> None:
